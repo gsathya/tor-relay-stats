@@ -93,6 +93,11 @@ def result():
                 options.top = int(value)
             except:
                 options.top = 10
+        elif key in ["country", "ases"]:
+            if value:
+                setattr(options, key, [value])
+            else:
+                setattr(options, key, None)
         else:
             setattr(options, key, value)
     
@@ -106,7 +111,6 @@ def result():
                    by_as_number=options.by_as,
                    short=None,
                    links=None)
-
     return render_template('result.html', results=parse(output_string, options.by_country or options.by_as))
     
 if __name__ == '__main__':
