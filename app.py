@@ -87,9 +87,7 @@ def result():
         return redirect(url_for('index'))
     
     options = Opt()
-    
     for key, value in request.form.items():
-        print key, value
         if key == "top":
             try:
                 options.top = int(value)
@@ -97,7 +95,7 @@ def result():
                 options.top = 10
         else:
             setattr(options, key, value)
-
+    
     stats = torstats.RelayStats(options)
     sorted_groups = stats.format_and_sort_groups(stats.relays,
                         by_country=options.by_country,

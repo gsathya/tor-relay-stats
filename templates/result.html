@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <title>Tor Metrics</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Tor relay stats">
+    <meta name="author" content="Sathyanarayanan Gunasekaran">
 
     <!-- Le styles -->
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
@@ -33,11 +33,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Tor Metrics</a>
+          <a class="brand" href="{{
+        url_for('index') }}">Tor Metrics</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
+              <li class="active"><a href="{{
+        url_for('index') }}">Home</a></li>
+              <li><a href="https://trac.torproject.org/projects/tor/ticket/6498">Trac
+              Ticket #6498</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
