@@ -1,4 +1,5 @@
 import os
+import re
 import torstats
 from flask import Flask, request, redirect, render_template, url_for
 
@@ -37,7 +38,7 @@ class Result():
         self.as_no = None
         self.as_name = None
 
-def parse(output_string):
+def parse(output_string, grouping=False):
     results = []
     for id, line in enumerate(output_string):
         # skip headings
@@ -46,6 +47,18 @@ def parse(output_string):
         result = Result()
         values = line.split()
 
+        """
+        This is a super weird hack. When we group by country or AS, the
+        nickname is replaced with '(x relays)' which when split() creates
+        ['(x','relays)']. I need to join this again and then left shift all
+        the elements and delete the last element in the list.
+        """
+        if grouping:
+            values[5] = "%s %s" % (values[5], values[6])
+            for id, element in enumerate(values[7:]):
+                values[id-1] = values[id]
+            del values[id]
+            
         # TODO: change inaccurate value of 10
         if len(values) > 10:
             result.cw = values[0]
@@ -60,6 +73,7 @@ def parse(output_string):
             result.cc = values[9]
             result.as_no = values[10]
             result.as_name = ' '.join(values[11:])
+            result.as_name = re.sub(r'\([^)]*\)', '', result.as_name)
             results.append(result)
     return results
 
@@ -77,7 +91,10 @@ def result():
     for key, value in request.form.items():
         print key, value
         if key == "top":
-            options.top = int(value)
+            try:
+                options.top = int(value)
+            except:
+                options.top = 10
         else:
             setattr(options, key, value)
 
@@ -92,7 +109,7 @@ def result():
                    short=None,
                    links=None)
 
-    return render_template('result.html', results=parse(output_string))
+    return render_template('result.html', results=parse(output_string, options.by_country or options.by_as))
     
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.

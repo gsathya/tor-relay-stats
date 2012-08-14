@@ -73,8 +73,13 @@
               <td>{{ result.p_middle }}</td>
               <td>{{ result.p_exit }}</td>
               <td>{{ result.nick }}</td>
-              <td><a href="https://atlas.torproject.org/#details/{{
+              <!-- this happens when we do groupings-->
+              {% if result.fp == '*' %}
+              <td>{{ result.fp }}</td>
+              {% else %}
+                <td><a href="https://atlas.torproject.org/#details/{{
               result.fp }}">{{ result.fp }}</a></td>
+              {% endif %}
               <td>{{ result.exit }}</td>
               <td>{{ result.guard }}</td>
               <td>{{ result.cc }}</td>
