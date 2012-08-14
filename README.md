@@ -1,7 +1,7 @@
 Tor relay stats
 =========
 
-Show various metrics relating tor relays.
+Show various metrics related to tor relays.
 
 Deploy
 ====
