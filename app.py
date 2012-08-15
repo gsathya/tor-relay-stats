@@ -78,7 +78,7 @@ def parse(output_string, grouping=False, sort_key=None):
             result.as_name = re.sub(r'\([^)]*\)', '', result.as_name)
 
             if sort_key:
-                key = getattr(result, sort_key)
+                key = float(getattr(result, sort_key)[:-1])
                 if sorted_results.has_key(key):
                     sorted_results[key].append(result)
                 else:
