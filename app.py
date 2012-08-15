@@ -38,8 +38,9 @@ class Result():
         self.as_no = None
         self.as_name = None
 
-def parse(output_string, grouping=False):
-    results = []
+def parse(output_string, grouping=False, sort_key=None):
+    results = {}
+
     for id, line in enumerate(output_string):
         # skip headings
         if id == 0: continue
@@ -74,7 +75,17 @@ def parse(output_string, grouping=False):
             result.as_no = values[10]
             result.as_name = ' '.join(values[11:])
             result.as_name = re.sub(r'\([^)]*\)', '', result.as_name)
-            results.append(result)
+
+            if sort_key:
+                key = getattr(result, sort_key)
+                if results.has_key(key):
+                    results[key].append(result)
+                else:
+                    results[key] = [result]
+            else:
+                key = getattr(result, 'fp')
+                results[key] = result
+            
     return results
 
 @app.route('/')
@@ -82,15 +93,19 @@ def index():
     return render_template('index.html')
 
 @app.route('/result', methods=['GET'])
-def result():    
+def result():
     options = Opt()
-
+    sort_key = None
+    relays = []
+    
     for key, value in request.args.items():
         if key == "top":
             try:
                 options.top = int(value)
             except:
                 options.top = 10
+        elif key == "sort":
+            sort_key = value
         elif key in ["country", "ases"]:
             if value:
                 setattr(options, key, [value])
@@ -109,7 +124,17 @@ def result():
                    by_as_number=options.by_as,
                    short=None,
                    links=None)
-    return render_template('result.html', results=parse(output_string, options.by_country or options.by_as))
+    results = parse(output_string, options.by_country or options.by_as, sort_key)
+    
+    if sort_key:
+        for key in sorted(results.iterkeys(), reverse=True):
+            for value in results[key]:
+                relays.append(value)
+    else:
+        for value in results.itervalues():
+            relays.append(value)
+    
+    return render_template('result.html', results=relays)
     
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
