@@ -55,7 +55,7 @@ def parse(output_string, grouping=False):
         """
         if grouping:
             values[5] = "%s %s" % (values[5], values[6])
-            for id, element in enumerate(values[7:]):
+            for id in xrange(7, len(values)):
                 values[id-1] = values[id]
             del values[id]
             
