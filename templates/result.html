@@ -53,6 +53,7 @@
         <table class="table table-striped table-condensed table-hover table-bordered">
           <thead>
             <tr>
+              <th>#</th>
               <th><a href="" id="cw" class="sort">CW</a></th>
               <th><a href="" id="adv_bw" class="sort">Advertised Bandwidth</a></th>
               <th><a href="" id="p_guard" class="sort">P_Guard</a></th>
@@ -70,6 +71,7 @@
           <tbody>
            {% for result in results %}
             <tr>
+              <td>{{ loop.index }}</td>
               <td>{{ result.cw }}</td>
               <td>{{ result.adv_bw }}</td>
               <td>{{ result.p_guard }}</td>

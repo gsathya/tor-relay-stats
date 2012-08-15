@@ -39,7 +39,8 @@ class Result():
         self.as_name = None
 
 def parse(output_string, grouping=False, sort_key=None):
-    results = {}
+    results = []
+    sorted_results = {}
 
     for id, line in enumerate(output_string):
         # skip headings
@@ -68,7 +69,7 @@ def parse(output_string, grouping=False, sort_key=None):
             result.p_middle = values[3]
             result.p_exit = values[4]
             result.nick = values[5]
-            result.fp = values[6]
+            result.fp = values[6][:8]
             result.exit = values[7]
             result.guard = values[8]
             result.cc = values[9]
@@ -78,15 +79,13 @@ def parse(output_string, grouping=False, sort_key=None):
 
             if sort_key:
                 key = getattr(result, sort_key)
-                if results.has_key(key):
-                    results[key].append(result)
+                if sorted_results.has_key(key):
+                    sorted_results[key].append(result)
                 else:
-                    results[key] = [result]
+                    sorted_results[key] = [result]
             else:
-                key = getattr(result, 'fp')
-                results[key] = result
-            
-    return results
+                results.append(result)
+    return results if results else sorted_results
 
 @app.route('/')
 def index():    
@@ -131,8 +130,7 @@ def result():
             for value in results[key]:
                 relays.append(value)
     else:
-        for value in results.itervalues():
-            relays.append(value)
+        relays = results
     
     return render_template('result.html', results=relays)
     
