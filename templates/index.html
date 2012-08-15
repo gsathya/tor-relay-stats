@@ -49,7 +49,8 @@
 
     <div class="container">
       <div class="hero-unit">
-        <form class="form-horizontal" action="{{ url_for('result') }}" method=post>
+        <form class="form-horizontal" action="{{ url_for('result') }}"
+              method=get id="form">
           <fieldset>
             <legend>Tor Relay Stats</legend>
             <div class="control-group">
@@ -57,27 +58,27 @@
               <label class="control-label" for="inactive">Inactive</label>
             <div class="controls">
               <label class="checkbox">
-                <input type="checkbox" id="inactive" value="option1" name="inactive">
+                <input type="checkbox" id="inactive" value="True" name="inactive">
                   include relays in selection that aren't currently running </label>
             </div>
             <label class="control-label" for="guards">Guards</label>
             <div class="controls">
               <label class="checkbox">
-                <input type="checkbox" id="guards" value="option1" name="guards_only">
+                <input type="checkbox" id="guards" value="True" name="guards_only">
                  select only relays suitable for guard position
               </label>
             </div>
             <label class="control-label" for="exit">Exits</label>
             <div class="controls">
               <label class="checkbox">
-                <input type="checkbox" id="exit" value="option1" name="exits_only">
+                <input type="checkbox" id="exit" value="True" name="exits_only">
                   select only relays suitable for exit position</label>
             </div>
             <label class="control-label" for="fastExit">Fast
             Exit Nodes</label>
             <div class="controls">
               <label class="checkbox">
-                <input type="checkbox" id="fastExit" value="option1" name="fast_exits_only">
+                <input type="checkbox" id="fastExit" value="True" name="fast_exits_only">
                   select only 100+ Mbit/s exits allowing ports 80,
                   443, 554, and 1755
               </label>
@@ -106,12 +107,12 @@
               <label class="control-label" for="country">Country</label>
             <div class="controls">
               <label class="checkbox">
-                <input type="checkbox" id="country" value="option1" name="by_country">
+                <input type="checkbox" id="country" value="True" name="by_country">
                  group relays by country </label>
             </div>
               <label class="control-label" for="as">AS</label>
             <div class="controls">
-                <input type="checkbox" id="as" value="option1" name="by_as">
+                <input type="checkbox" id="as" value="True" name="by_as">
                  group relays by AS </label>
             </div>
             </div>
@@ -143,6 +144,22 @@
 
     <!-- Le javascript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Placed at the end of the document so the pages load faster
+    -->
+
+    <script>
+      var myForm = document.getElementById('form');
+
+      myForm.onsubmit = function() {
+         var allInputs = myForm.getElementsByTagName('input');
+         var input, i;
+         
+         for(i = 0; input = allInputs[i]; i++) {
+            if(input.getAttribute('name') && !input.value) {
+               input.setAttribute('name', '');
+            }
+         }
+      };
+      </script>
   </body>
 </html>

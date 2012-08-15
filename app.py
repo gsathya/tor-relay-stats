@@ -81,13 +81,11 @@ def parse(output_string, grouping=False):
 def index():    
     return render_template('index.html')
 
-@app.route('/result', methods=['POST', 'GET'])
-def result():
-    if request.method == 'GET':
-        return redirect(url_for('index'))
-    
+@app.route('/result', methods=['GET'])
+def result():    
     options = Opt()
-    for key, value in request.form.items():
+
+    for key, value in request.args.items():
         if key == "top":
             try:
                 options.top = int(value)
